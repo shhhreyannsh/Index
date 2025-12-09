@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NDA Promises & Performance – Youth Parliament Project</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    :root {
+        --bg: #0f172a;
+        --bg-soft: #111827;
+        --card-bg: rgba(15,23,42,0.95);
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #0ea5e9;
+        --accent-2: #22c55e;
+        --danger: #dc2626;
+        --warning: #eab308;
+        --partial: #f97316;
+        --shadow: 0 18px 40px rgba(15,23,42,0.9);
+    }
+
+    body.light {
+        --bg: #f3f4f6;
+        --bg-soft: #e5e7eb;
+        --card-bg: #ffffff;
+        --text: #111827;
+        --muted: #4b5563;
+        --accent: #2563eb;
+        --accent-2: #16a34a;
+        --shadow: 0 12px 25px rgba(15,23,42,0.18);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                     Roboto, sans-serif;
+    }
+
+    body {
+        background: radial-gradient(circle at top, #1e293b 0, var(--bg) 45%);
+        color: var(--text);
+        min-height: 100vh;
+        scroll-behavior: smooth;
+    }
+
+    /* NAVBAR */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(18px);
+        background: linear-gradient(to right,
+                   rgba(15,23,42,0.92),
+                   rgba(15,23,42,0.8));
+        border-bottom: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .nav-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0.7rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .brand {
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        color: var(--accent);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 0.8rem;
+        font-size: 0.85rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        text-decoration: none;
+        color: var(--text);
+        border: 1px solid transparent;
+        transition: 0.2s ease;
+    }
+
+    .nav-links a:hover {
+        border-color: rgba(148,163,184,0.7);
+        background: rgba(15,23,42,0.8);
+    }
+
+    .theme-toggle {
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.8);
+        padding: 0.25rem 0.7rem;
+        background: rgba(15,23,42,0.8);
+        color: var(--text);
+        font-size: 0.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: 0.25s ease;
+    }
+
+    .theme-toggle:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 25px rgba(15,23,42,0.65);
+    }
+
+    .wrapper {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 1.4rem 1rem 2.5rem;
+    }
+
+    /* HEADER SECTION */
+    .hero {
+        display: grid;
+        gap: 1.4rem;
+        margin-top: 1.4rem;
+    }
+
+    @media (min-width: 768px) {
+        .hero {
+            grid-template-columns: 2.2fr 1.4fr;
+            align-items: center;
+        }
+    }
+
+    .hero-main {
+        animation: fadeUp 0.8s ease-out both;
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: 0.95rem;
+        max-width: 32rem;
+    }
+
+    .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.8rem;
+    }
+
+    .chip {
+        padding: 0.25rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border: 1px solid rgba(125,211,252,0.7);
+        color: #7dd3fc;
+        background: rgba(8,47,73,0.7);
+    }
+
+    .hero-card {
+        background: var(--card-bg);
+        border-radius: 18px;
+        padding: 1.1rem 1.1rem 1.2rem;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(148,163,184,0.6);
+        animation: floatIn 0.9s ease-out both;
+    }
+
+    .hero-card h2 {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .hero-card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+
+    /* GENERIC CARD */
+    .card {
+        background: var(--card-bg);
+        border-radius: 18px;
+        padding: 1.2rem 1.2rem 1.25rem;
+        margin-top: 1.4rem;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(148,163,184,0.55);
+        animation: fadeUp 0.7s ease-out both;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+
+    /* PROMISES TABLE */
+
+    .table-wrap {
+        margin-top: 0.9rem;
+        border-radius: 14px;
+        border: 1px solid rgba(148,163,184,0.55);
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+    }
+
+    thead {
+        background: linear-gradient(to right, var(--accent), var(--accent-2));
+    }
+
+    thead th {
+        padding: 0.7rem 0.8rem;
+        text-align: left;
+        color: #0b1120;
+        font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+        background: rgba(15,23,42,0.92);
+    }
+
+    body.light tbody tr:nth-child(even) {
+        background: #f9fafb;
+    }
+
+    tbody tr:nth-child(odd) {
+        background: rgba(15,23,42,0.75);
+    }
+
+    body.light tbody tr:nth-child(odd) {
+        background: #eef2ff;
+    }
+
+    tbody td {
+        padding: 0.6rem 0.8rem;
+        vertical-align: top;
+        color: var(--text);
+    }
+
+    tbody tr:hover {
+        background: rgba(15,23,42,0.93);
+        transform: translateY(-1px);
+        transition: background 0.2s, transform 0.15s;
+    }
+
+    body.light tbody tr:hover {
+        background: #e0f2fe;
+    }
+
+    .status-pill {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+        color: #0b1120;
+    }
+
+    .done {
+        background: var(--accent-2);
+    }
+    .progress {
+        background: var(--warning);
+    }
+    .partial {
+        background: var(--partial);
+        color: #111827;
+    }
+    .notdone {
+        background: var(--danger);
+    }
+
+    /* PIE CHART SECTION */
+
+    .charts-grid {
+        display: grid;
+        gap: 1.3rem;
+        margin-top: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .charts-grid {
+            grid-template-columns: 1.2fr 1.6fr;
+        }
+    }
+
+    .pie-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .pie {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background:
+          conic-gradient(
+            var(--accent-2) 0 96deg,       /* Done: 4/15 */
+            var(--warning) 96deg 216deg,   /* In progress: 5/15 */
+            var(--partial) 216deg 312deg,  /* Partial: 4/15 */
+            var(--danger) 312deg 360deg    /* Not done: 2/15 */
+          );
+        box-shadow: var(--shadow);
+        position: relative;
+        animation: spinIn 1s ease-out;
+    }
+
+    .pie::after {
+        content: '';
+        position: absolute;
+        inset: 24px;
+        border-radius: 50%;
+        background: var(--card-bg);
+    }
+
+    .pie-center {
+        position: absolute;
+        inset: 24px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        text-align: center;
+        padding: 0.4rem;
+    }
+
+    .pie-center span {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+
+    .legend {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+    }
+
+    .dot.done { background: var(--accent-2); }
+    .dot.progress { background: var(--warning); }
+    .dot.partial { background: var(--partial); }
+    .dot.notdone { background: var(--danger); }
+
+    /* STATE-WISE GRID */
+
+    .state-grid {
+        display: grid;
+        margin-top: 1rem;
+        gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .state-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    .state-card {
+        padding: 0.9rem;
+        border-radius: 14px;
+        border: 1px solid rgba(148,163,184,0.65);
+        background: radial-gradient(circle at top left,
+                     rgba(56,189,248,0.2),
+                     var(--card-bg) 45%);
+        font-size: 0.85rem;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+        transform: translateY(0);
+        transition: transform 0.18s ease, box-shadow 0.18s ease,
+                    border-color 0.18s ease;
+    }
+
+    .state-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 24px 55px rgba(15,23,42,0.95);
+        border-color: var(--accent);
+    }
+
+    .state-name {
+        font-weight: 600;
+        margin-bottom: 0.15rem;
+    }
+
+    .state-tag {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #a5f3fc;
+    }
+
+    .state-points {
+        margin-top: 0.5rem;
+        padding-left: 1rem;
+        color: var(--muted);
+    }
+
+    .state-points li {
+        margin-bottom: 0.15rem;
+    }
+
+    /* MULTISECTION TITLES */
+
+    .section-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--muted);
+        margin-bottom: 0.25rem;
+    }
+
+    /* FOOTER */
+
+    footer {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    footer span {
+        color: var(--accent);
+    }
+
+    /* ANIMATIONS */
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes spinIn {
+        from { transform: scale(0.5) rotate(-40deg); opacity: 0; }
+        to { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-inner">
+        <div class="brand">NDA – PROMISES & PERFORMANCE</div>
+        <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#promises">Promises vs Work</a>
+            <a href="#states">State-wise</a>
+            <a href="#charts">Charts</a>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+            <span id="themeIcon">🌙</span>
+            <span>Dark / Light</span>
+        </button>
+    </div>
+</nav>
+
+<div class="wrapper">
+
+    <!-- OVERVIEW SECTION -->
+    <section id="overview" class="hero">
+        <div class="hero-main">
+            <div class="section-label">Youth Parliament Project</div>
+            <div class="title">NDA Ruling States, Promises & Performance</div>
+            <p class="subtitle">
+                A student-friendly snapshot of what the BJP-led National Democratic
+                Alliance (NDA) promised in 2024 and what has been achieved (or not)
+                up to around 2025 – along with a quick view of its narrative in key
+                ruling states.
+            </p>
+            <div class="chip-row">
+                <div class="chip">2014–2025 – NDA at the Centre</div>
+                <div class="chip">Manifesto 2024 – “Modi ki Guarantee”</div>
+                <div class="chip">Educational use only</div>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <h2>How to use this page in your speech</h2>
+            <p>
+                1. Start with the <strong>Overall Narrative</strong>: development,
+                stability, welfare.<br>
+                2. Use <strong>Promises vs Work</strong> table to show
+                achievements and gaps.<br>
+                3. Pick 2–3 <strong>states</strong> (UP, Bihar, Gujarat) and mention
+                their focus areas.<br>
+                4. End with the <strong>chart</strong> – how many promises are
+                fulfilled, in-progress or still pending.
+            </p>
+        </div>
+    </section>
+
+    <!-- PROMISES VS WORK -->
+    <section id="promises" class="card">
+        <div class="section-label">Central Government – NDA / BJP</div>
+        <h2>Major 2024 Promises vs Status (2025)</h2>
+        <p>
+            This table compares some key points from the 2024 election campaign
+            and manifesto with the approximate status by 2025. It is a simplified
+            view for academic discussion, not an official audit.
+        </p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Promise (2024)</th>
+                        <th>Status 2025</th>
+                        <th>Details / Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Massive Employment Generation for Youth</td>
+                        <td><span class="status-pill progress">In Progress</span></td>
+                        <td>Jobs created via infra projects and services, but
+                            unemployment – especially among youth – remains a serious concern.</td>
+                    </tr>
+                    <tr>
+                        <td>Strengthening “Make in India” & Manufacturing</td>
+                        <td><span class="status-pill partial">Partially Done</span></td>
+                        <td>Growth in sectors like mobiles, defence and electronics,
+                            yet manufacturing share and job intensity below targets.</td>
+                    </tr>
+                    <tr>
+                        <td>Women Empowerment (Nari Shakti)</td>
+                        <td><span class="status-pill done">Fulfilled</span></td>
+                        <td>Women’s Reservation Bill passed for Parliament/Assemblies;
+                            schemes for LPG, sanitation and cash support extended.</td>
+                    </tr>
+                    <tr>
+                        <td>Housing for All – PM Awas Yojana Expansion</td>
+                        <td><span class="status-pill progress">In Progress</span></td>
+                        <td>Large number of houses sanctioned and completed, but
+                            universal coverage still work in progress.</td>
+                    </tr>
+                    <tr>
+                        <td>Free / Subsidised LPG Connections (Ujjwala 2.0)</td>
+                        <td><span class="status-pill done">Fulfilled</span></td>
+                        <td>Additional beneficiaries added, some subsidy support
+                            restored; refill affordability still debated.</td>
+                    </tr>
+                    <tr>
+                        <td>MSME Support & Start-up India Boost</td>
+                        <td><span class="status-pill partial">Partially Done</span></td>
+                        <td>Credit schemes and digital platforms expanded, but MSMEs
+                            affected by slowdown and credit gaps.</td>
+                    </tr>
+                    <tr>
+                        <td>National Infrastructure Push (Highways, Railways, Airports)</td>
+                        <td><span class="status-pill done">Fulfilled</span></td>
+                        <td>Record highway construction, Vande Bharat trains, and many
+                            airports/upgrades – a visible success point.</td>
+                    </tr>
+                    <tr>
+                        <td>Agriculture Reforms & Doubling Farmers’ Income</td>
+                        <td><span class="status-pill notdone">Not Achieved</span></td>
+                        <td>Farm laws withdrawn after protests; income not literally
+                            doubled; MSP and cost issues remain.</td>
+                    </tr>
+                    <tr>
+                        <td>Skill Development Mission for Youth</td>
+                        <td><span class="status-pill progress">In Progress</span></td>
+                        <td>Skill India and related schemes exist, but mismatch between
+                            skills and jobs continues.</td>
+                    </tr>
+                    <tr>
+                        <td>Electric Vehicles & Green Energy Expansion</td>
+                        <td><span class="status-pill partial">Partially Done</span></td>
+                        <td>Solar and renewables expanded; EV policies active, adoption
+                            growing more in cities than villages.</td>
+                    </tr>
+                    <tr>
+                        <td>Strong National Security & Border Protection</td>
+                        <td><span class="status-pill done">Fulfilled</span></td>
+                        <td>Heavy focus on defence modernisation, border infrastructure
+                            and strategic partnerships; debated politically but showcased
+                            as key achievement.</td>
+                    </tr>
+                    <tr>
+                        <td>Welfare for Poor (Free Ration, DBT Schemes)</td>
+                        <td><span class="status-pill done">Fulfilled</span></td>
+                        <td>Free ration scheme extended; direct benefit transfers
+                            scaled up to crores of beneficiaries.</td>
+                    </tr>
+                    <tr>
+                        <td>Better Urban Living (Smart Cities & Metro)</td>
+                        <td><span class="status-pill partial">Partially Done</span></td>
+                        <td>Some cities see major improvement; many projects face delays
+                            or remain limited to certain pockets.</td>
+                    </tr>
+                    <tr>
+                        <td>One Nation, One Election</td>
+                        <td><span class="status-pill notdone">Not Implemented</span></td>
+                        <td>High-level committee formed, but no constitutional change
+                            or national roll-out yet.</td>
+                    </tr>
+                    <tr>
+                        <td>Uniform Civil Code (UCC)</td>
+                        <td><span class="status-pill partial">Partially Done</span></td>
+                        <td>Implemented in Uttarakhand; discussed elsewhere, but no
+                            nationwide UCC so far.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- STATE-WISE SECTION -->
+    <section id="states" class="card">
+        <div class="section-label">NDA Ruling States – Snapshot</div>
+        <h2>State-wise Narrative & Focus Areas</h2>
+        <p>
+            NDA’s narrative changes slightly from state to state. Below are
+            examples of a few major NDA-ruled states and what themes are usually
+            highlighted there.
+        </p>
+
+        <div class="state-grid">
+            <div class="state-card">
+                <div class="state-name">Uttar Pradesh</div>
+                <div class="state-tag">BJP-led NDA Government</div>
+                <ul class="state-points">
+                    <li>Law & order and “bulldozer” image against crime.</li>
+                    <li>Expressways, airports, religious tourism (Ayodhya, Kashi).</li>
+                    <li>Welfare schemes for rural poor and women.</li>
+                </ul>
+            </div>
+
+            <div class="state-card">
+                <div class="state-name">Gujarat</div>
+                <div class="state-tag">BJP Stronghold</div>
+                <ul class="state-points">
+                    <li>Industrial growth, ports, trade and investments.</li>
+                    <li>“Model state” branding for infrastructure.</li>
+                    <li>Urban development and business climate.</li>
+                </ul>
+            </div>
+
+            <div class="state-card">
+                <div class="state-name">Bihar</div>
+                <div class="state-tag">JD(U) + BJP – NDA</div>
+                <ul class="state-points">
+                    <li>Alliance politics and stability narrative.</li>
+                    <li>Roads, electricity, plus welfare for women and poor.</li>
+                    <li>Caste-based and social justice debates remain central.</li>
+                </ul>
+            </div>
+
+            <div class="state-card">
+                <div class="state-name">Maharashtra</div>
+                <div class="state-tag">BJP + Allies</div>
+                <ul class="state-points">
+                    <li>Politics of alliances and party splits.</li>
+                    <li>Focus on Mumbai infra, metro, coastal roads.</li>
+                    <li>Balance between farmer issues and urban growth.</li>
+                </ul>
+            </div>
+
+            <div class="state-card">
+                <div class="state-name">Assam</div>
+                <div class="state-tag">BJP-led NDA</div>
+                <ul class="state-points">
+                    <li>Identity, NRC/CAA debates and border security.</li>
+                    <li>Connectivity and North-East integration.</li>
+                    <li>Flood management and river projects.</li>
+                </ul>
+            </div>
+
+            <div class="state-card">
+                <div class="state-name">Chhattisgarh</div>
+                <div class="state-tag">BJP-led NDA</div>
+                <ul class="state-points">
+                    <li>Tribal development and forest rights issues.</li>
+                    <li>Naxalism and internal security strategy.</li>
+                    <li>Mining, power and industrial investment.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHARTS SECTION -->
+    <section id="charts" class="card">
+        <div class="section-label">Visual Summary</div>
+        <h2>How many promises are actually on track?</h2>
+        <p>
+            If we classify the 15 major promises above, we can roughly group them
+            into four buckets: <strong>Fulfilled</strong>, <strong>In Progress</strong>,
+            <strong>Partially Done</strong> and <strong>Not Done</strong>.
+        </p>
+
+        <div class="charts-grid">
+            <div class="pie-card">
+                <div class="pie">
+                    <div class="pie-center">
+                        <span>15</span>
+                        <div>Major<br>Promises</div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="dot done"></div>
+                        <span>Fulfilled – 4</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot progress"></div>
+                        <span>In Progress – 5</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot partial"></div>
+                        <span>Partially Done – 4</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="dot notdone"></div>
+                        <span>Not Done – 2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="font-size:1rem;margin-bottom:0.4rem;">How to explain this in your speech</h3>
+                <p style="font-size:0.9rem;color:var(--muted);">
+                    You can say something like:
+                </p>
+                <p style="font-size:0.9rem;margin-top:0.4rem;">
+                    “Out of around 15 big promises that I have considered from the
+                    2024 manifesto, roughly <strong>4</strong> can be called
+                    <strong>fulfilled</strong>, around <strong>5</strong> are
+                    <strong>still in progress</strong>, about <strong>4</strong> are
+                    only <strong>partly fulfilled</strong>, and at least
+                    <strong>2</strong> are clearly <strong>not implemented</strong>.
+                    This shows that while there is visible progress in many areas,
+                    there is also a clear gap between promises and reality –
+                    especially on jobs and farmers’ income.”
+                </p>
+                <p style="font-size:0.9rem;margin-top:0.5rem;color:var(--muted);">
+                    You can then invite the “opposition” side in Youth Parliament
+                    to question these gaps, or defend them if you are representing
+                    the ruling party.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        Made for <span>Shreyansh’s Youth Parliament</span> – feel free to edit text, add your own data and citations.
+    </footer>
+
+</div>
+
+<script>
+    // Dark / Light mode toggle
+    const toggle = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+
+    function setTheme(isLight) {
+        if (isLight) {
+            document.body.classList.add('light');
+            icon.textContent = '☀️';
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            icon.textContent = '🌙';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    // Load saved preference
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') {
+        setTheme(true);
+    }
+
+    toggle.addEventListener('click', () => {
+        const isLight = !document.body.classList.contains('light');
+        setTheme(isLight);
+    });
+</script>
+
+</body>
+</html>
